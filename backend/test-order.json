@@ -1,0 +1,20 @@
+{
+  "orderDate": "2024-01-15",
+  "companyName": "测试公司A",
+  "contactInfo": [
+    {
+      "name": "张三",
+      "email": "zhangsan@test.com",
+      "phone": "13800138000"
+    }
+  ],
+  "leadNumber": "LEAD-001",
+  "newOrOld": "新客户",
+  "customerLevel": "A",
+  "country": "中国",
+  "continent": "亚洲",
+  "source": "展会",
+  "customerNature": "贸易商",
+  "invoiceAmount": 10000.50,
+  "paymentAmount": 5000.00
+}
