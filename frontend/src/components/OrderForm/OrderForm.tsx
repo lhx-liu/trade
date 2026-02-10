@@ -47,7 +47,8 @@ const OrderForm: React.FC<OrderFormProps> = ({ visible, onCancel, editingOrder }
     } else if (visible) {
       form.resetFields();
     }
-  }, [visible, editingOrder, form, actions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible, editingOrder, form]);
 
   const handleSubmit = async () => {
     try {

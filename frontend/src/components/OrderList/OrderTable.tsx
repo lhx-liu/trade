@@ -58,6 +58,7 @@ const OrderTable: React.FC<OrderTableProps> = ({ onEdit, onCompanyClick }) => {
       dataIndex: 'orderDate',
       key: 'orderDate',
       width: 120,
+      fixed: 'left',
       render: (date: string) => formatDate(date),
     },
     {
@@ -65,6 +66,7 @@ const OrderTable: React.FC<OrderTableProps> = ({ onEdit, onCompanyClick }) => {
       dataIndex: 'companyName',
       key: 'companyName',
       width: 150,
+      fixed: 'left',
       render: (companyName: string) => (
         <a onClick={() => onCompanyClick(companyName)}>{companyName}</a>
       ),
@@ -92,6 +94,14 @@ const OrderTable: React.FC<OrderTableProps> = ({ onEdit, onCompanyClick }) => {
       dataIndex: 'leadNumber',
       key: 'leadNumber',
       width: 120,
+    },
+    {
+      title: '客户商机',
+      dataIndex: 'businessOpportunity',
+      key: 'businessOpportunity',
+      width: 200,
+      ellipsis: true,
+      render: (text: string) => text || '-',
     },
     {
       title: '新老客户',
@@ -198,7 +208,7 @@ const OrderTable: React.FC<OrderTableProps> = ({ onEdit, onCompanyClick }) => {
         pageSizeOptions: ['10', '20', '50', '100'],
         onChange: handlePageChange,
       }}
-      scroll={{ x: 1800 }}
+      scroll={{ x: 2000 }}
     />
   );
 };

@@ -223,7 +223,21 @@ class OrderService {
    * 需求: 4.1, 4.2, 4.3-4.10, 4.12, 4.13, 4.15
    */
   async queryOrders(params: QueryParams): Promise<{ orders: Order[]; total: number }> {
-    return this.orderDAO.query(params);
+    const result = this.orderDAO.query(params);
+    
+    // 为每个订单附加客户商机信息
+    const ordersWithOpportunity = result.orders.map(order => {
+      const customer = this.customerDAO.findByCompanyName(order.companyName);
+      return {
+        ...order,
+        businessOpportunity: customer?.businessOpportunity || '',
+      };
+    });
+    
+    return {
+      orders: ordersWithOpportunity,
+      total: result.total,
+    };
   }
 
   /**

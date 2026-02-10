@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, useMemo, ReactNode } from 'react';
 import { message } from 'antd';
 import type { Order, Customer, Statistics, QueryParams } from '../types';
 import { orderApi, customerApi, statisticsApi } from '../services/api';
@@ -134,8 +134,8 @@ interface AppProviderProps {
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
 
-  // Actions
-  const actions = {
+  // Actions - 使用 useMemo 避免每次渲染都创建新对象
+  const actions = useMemo(() => ({
     // 查询订单列表
     fetchOrders: async (params: QueryParams) => {
       try {
@@ -264,12 +264,12 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     setQueryParams: (params: QueryParams) => {
       dispatch({ type: 'SET_QUERY_PARAMS', payload: params });
     },
-  };
+  }), []);
 
-  const value: AppContextValue = {
+  const value: AppContextValue = useMemo(() => ({
     state,
     actions,
-  };
+  }), [state, actions]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };

@@ -20,7 +20,7 @@ export interface Order {
   customerNature?: string;
   invoiceAmount?: number;
   paymentAmount?: number;
-  businessOpportunity?: string;   // 客户商机（仅用于API传输，不存储在订单表）
+  businessOpportunity?: string;   // 客户商机（从客户表关联查询）
   createdAt?: string;
   updatedAt?: string;
 }
