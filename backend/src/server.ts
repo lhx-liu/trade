@@ -4,6 +4,7 @@ import DatabaseManager from './database/DatabaseManager';
 import orderRoutes from './routes/orderRoutes';
 import customerRoutes from './routes/customerRoutes';
 import statisticsRoutes from './routes/statisticsRoutes';
+import customerAnalysisRoutes from './routes/customerAnalysisRoutes';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 
 const app: Express = express();
@@ -31,6 +32,7 @@ app.use((req, res, next) => {
 app.use('/api/orders', orderRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/statistics', statisticsRoutes);
+app.use('/api/customer-analysis', customerAnalysisRoutes);
 
 // 健康检查端点
 app.get('/health', (req, res) => {
