@@ -148,6 +148,44 @@ class CustomerAnalysisDAO {
   }
 
   /**
+   * 获取客户的Top N成单产品
+   * @param companyName 公司名称
+   * @param limit 返回数量限制，默认5
+   * @returns 成单产品列表，按出现次数降序排列
+   */
+  getTopClosedProducts(companyName: string, limit: number = 5): Array<{ productName: string; count: number }> {
+    try {
+      const sql = `
+        SELECT closed_product, COUNT(*) as count
+        FROM orders
+        WHERE company_name = ? AND closed_product IS NOT NULL AND closed_product != ''
+        GROUP BY closed_product
+        ORDER BY count DESC
+        LIMIT ?
+      `;
+
+      const result = this.db.exec(sql, [companyName, limit]);
+
+      if (!result.length || !result[0].values.length) {
+        return [];
+      }
+
+      const products: Array<{ productName: string; count: number }> = [];
+      for (const row of result[0].values) {
+        products.push({
+          productName: row[0] as string,
+          count: row[1] as number,
+        });
+      }
+
+      return products;
+    } catch (error) {
+      console.error('查询Top成单产品失败:', error);
+      throw new Error('查询Top成单产品失败');
+    }
+  }
+
+  /**
    * 将数据库行映射为 CustomerRawData 对象
    */
   private mapRowToCustomerRawData(columns: string[], row: any[]): CustomerRawData {

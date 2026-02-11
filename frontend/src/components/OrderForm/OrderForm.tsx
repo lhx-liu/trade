@@ -29,6 +29,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ visible, onCancel, editingOrder }
           form.setFieldsValue({
             ...editingOrder,
             orderDate: editingOrder.orderDate ? dayjs(editingOrder.orderDate) : null,
+            paymentDate: editingOrder.paymentDate ? dayjs(editingOrder.paymentDate) : null,
           });
 
           // 异步加载客户商机信息
@@ -61,6 +62,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ visible, onCancel, editingOrder }
       const orderData: Order = {
         ...orderFields,
         orderDate: values.orderDate ? dayjs(values.orderDate).format('YYYY-MM-DD') : '',
+        paymentDate: values.paymentDate ? dayjs(values.paymentDate).format('YYYY-MM-DD') : undefined,
       };
 
       // 将商机信息作为额外参数传递
@@ -247,6 +249,59 @@ const OrderForm: React.FC<OrderFormProps> = ({ visible, onCancel, editingOrder }
               rows={3}
               maxLength={500}
               showCount
+            />
+          </Form.Item>
+
+          {/* 新增字段 */}
+          <Form.Item
+            label="客户背调"
+            name="customerBackgroundCheck"
+          >
+            <Input.TextArea
+              placeholder="请输入客户背调信息"
+              rows={2}
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="成单产品"
+            name="closedProduct"
+            rules={[
+              { required: true, message: '请输入成单产品' },
+            ]}
+          >
+            <Input placeholder="请输入成单产品" />
+          </Form.Item>
+
+          <Form.Item
+            label="到款日期"
+            name="paymentDate"
+          >
+            <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
+          </Form.Item>
+
+          <Form.Item
+            label="EXW货值"
+            name="exwValue"
+            rules={[
+              {
+                validator: (_, value) => {
+                  if (value === undefined || value === null || value === '') {
+                    return Promise.resolve();
+                  }
+                  if (validateNumber(value)) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('请输入有效的数值'));
+                },
+              },
+            ]}
+          >
+            <InputNumber
+              placeholder="请输入EXW货值"
+              style={{ width: '100%' }}
+              min={0}
+              precision={2}
             />
           </Form.Item>
         </Form>

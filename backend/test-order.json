@@ -1,20 +1,25 @@
 {
-  "orderDate": "2024-01-15",
-  "companyName": "测试公司A",
+  "orderDate": "2024-02-10",
+  "companyName": "测试公司B",
   "contactInfo": [
     {
-      "name": "张三",
-      "email": "zhangsan@test.com",
-      "phone": "13800138000"
+      "name": "李四",
+      "email": "lisi@test.com",
+      "phone": "13900139000"
     }
   ],
-  "leadNumber": "LEAD-001",
+  "leadNumber": "LEAD-2024-100",
   "newOrOld": "新客户",
   "customerLevel": "A",
   "country": "中国",
   "continent": "亚洲",
   "source": "展会",
   "customerNature": "贸易商",
-  "invoiceAmount": 10000.50,
-  "paymentAmount": 5000.00
+  "invoiceAmount": 60000,
+  "paymentAmount": 60000,
+  "businessOpportunity": "重要客户",
+  "customerBackgroundCheck": "已完成背景调查，信用优秀",
+  "closedProduct": "智能控制器 SC-800",
+  "paymentDate": "2024-02-20",
+  "exwValue": 55000
 }

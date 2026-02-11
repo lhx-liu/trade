@@ -10,6 +10,8 @@ import {
   MonthlyOrderCount,
   AmountTrendItem,
   OrderTimelineItem,
+  TopProduct,
+  TopProductsResponse,
 } from '../types';
 
 /**
@@ -101,6 +103,40 @@ class CustomerAnalysisService {
       orderFrequency,
       purchasePattern,
       orderTimeline,
+    };
+  }
+
+  /**
+   * 获取客户的Top N成单产品
+   * @param companyName 公司名称
+   * @param limit 返回数量限制，默认5
+   * @returns Top产品响应
+   */
+  async getTopProducts(companyName: string, limit: number = 5): Promise<TopProductsResponse> {
+    // 查询客户的所有订单（用于获取总订单数）
+    const orders = this.dao.getCustomerOrders(companyName);
+
+    if (orders.length === 0) {
+      // 客户不存在或没有订单，返回空结果
+      return {
+        products: [],
+        totalCount: 0,
+      };
+    }
+
+    // 查询Top产品
+    const topProducts = this.dao.getTopClosedProducts(companyName, limit);
+
+    // 添加排名
+    const products: TopProduct[] = topProducts.map((product, index) => ({
+      productName: product.productName,
+      count: product.count,
+      rank: index + 1,
+    }));
+
+    return {
+      products,
+      totalCount: orders.length,
     };
   }
 

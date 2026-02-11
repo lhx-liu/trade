@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Drawer, Descriptions, Timeline, Spin, message, Divider, Row, Col, Statistic, Card } from 'antd';
+import { Drawer, Descriptions, Timeline, Spin, message, Divider, Row, Col, Statistic, Card, List, Empty, Alert } from 'antd';
+import { TrophyOutlined } from '@ant-design/icons';
 import { CustomerDetailAnalysis } from '../../types/customerAnalysis';
 import { customerAnalysisApi } from '../../services/customerAnalysisService';
 import { formatCurrency } from '../../utils/formatters';
@@ -17,11 +18,15 @@ const CustomerDetail: React.FC<CustomerDetailProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<CustomerDetailAnalysis | null>(null);
+  const [topProducts, setTopProducts] = useState<Array<{ productName: string; count: number; rank: number }>>([]);
+  const [topProductsLoading, setTopProductsLoading] = useState(false);
+  const [topProductsError, setTopProductsError] = useState<string | null>(null);
 
   // 加载客户详细数据
   useEffect(() => {
     if (visible && companyName) {
       loadCustomerDetail();
+      loadTopProducts();
     }
   }, [visible, companyName]);
 
@@ -36,6 +41,24 @@ const CustomerDetail: React.FC<CustomerDetailProps> = ({
     } finally {
       setLoading(false);
     }
+  };
+
+  const loadTopProducts = async () => {
+    try {
+      setTopProductsLoading(true);
+      setTopProductsError(null);
+      const result = await customerAnalysisApi.getTopProducts(companyName, 5);
+      setTopProducts(result.products);
+    } catch (error) {
+      console.error('加载Top5成单产品失败:', error);
+      setTopProductsError('加载失败');
+    } finally {
+      setTopProductsLoading(false);
+    }
+  };
+
+  const retryLoadTopProducts = () => {
+    loadTopProducts();
   };
 
   return (
@@ -162,6 +185,60 @@ const CustomerDetail: React.FC<CustomerDetailProps> = ({
               {data.purchasePattern.cyclePattern}
             </Descriptions.Item>
           </Descriptions>
+
+          <Divider />
+
+          {/* Top5成单产品 */}
+          <h3><TrophyOutlined /> Top5成单产品</h3>
+          {topProductsLoading ? (
+            <div style={{ textAlign: 'center', padding: '20px 0' }}>
+              <Spin />
+            </div>
+          ) : topProductsError ? (
+            <Alert
+              message="加载失败"
+              description={topProductsError}
+              type="error"
+              showIcon
+              action={
+                <a onClick={retryLoadTopProducts}>重试</a>
+              }
+              style={{ marginBottom: 24 }}
+            />
+          ) : topProducts.length > 0 ? (
+            <List
+              dataSource={topProducts}
+              renderItem={(item) => (
+                <List.Item>
+                  <List.Item.Meta
+                    avatar={
+                      <div style={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: '50%',
+                        background: item.rank <= 3 ? '#ffd700' : '#e0e0e0',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: 'bold',
+                        color: item.rank <= 3 ? '#fff' : '#666',
+                      }}>
+                        {item.rank}
+                      </div>
+                    }
+                    title={item.productName}
+                    description={`采购次数: ${item.count}`}
+                  />
+                </List.Item>
+              )}
+              style={{ marginBottom: 24 }}
+            />
+          ) : (
+            <Empty
+              description="暂无成单产品数据"
+              style={{ marginBottom: 24 }}
+            />
+          )}
 
           <Divider />
 

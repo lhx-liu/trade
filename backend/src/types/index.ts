@@ -25,6 +25,11 @@ export interface Order {
   invoiceAmount?: number;
   paymentAmount?: number;
   businessOpportunity?: string;   // 客户商机（仅用于API传输，不存储在订单表）
+  // 新增字段
+  customerBackgroundCheck?: string; // 客户背调
+  closedProduct: string;            // 成单产品（必填）
+  paymentDate?: string;             // 到款日期 (YYYY-MM-DD)
+  exwValue?: number;                // EXW货值
   createdAt?: string;
   updatedAt?: string;
 }
@@ -172,4 +177,19 @@ export interface CustomerRawData {
   country: string;
   customer_level: string;
   new_or_old: string;
+}
+
+// ============ Top5成单产品相关类型 ============
+
+// Top产品项
+export interface TopProduct {
+  productName: string;  // 产品名称
+  count: number;        // 出现次数
+  rank: number;         // 排名（1-based）
+}
+
+// Top产品响应
+export interface TopProductsResponse {
+  products: TopProduct[];  // Top产品列表
+  totalCount: number;      // 总订单数
 }

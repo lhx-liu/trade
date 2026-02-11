@@ -119,6 +119,55 @@ class CustomerAnalysisController {
       });
     }
   }
+
+  /**
+   * 获取客户的Top N成单产品
+   * GET /api/customer-analysis/customers/:companyName/top-products
+   */
+  async getTopProducts(req: Request, res: Response): Promise<void> {
+    try {
+      const { companyName } = req.params;
+      const { limit } = req.query;
+
+      // 参数验证
+      if (!companyName) {
+        res.status(400).json({
+          success: false,
+          message: '公司名称不能为空',
+        });
+        return;
+      }
+
+      // 验证limit参数
+      let limitNum = 5; // 默认值
+      if (limit) {
+        limitNum = Number(limit);
+        if (isNaN(limitNum) || limitNum < 1 || limitNum > 100) {
+          res.status(400).json({
+            success: false,
+            message: 'limit参数必须是1-100之间的整数',
+          });
+          return;
+        }
+      }
+
+      // 调用服务层
+      const result = await this.service.getTopProducts(decodeURIComponent(companyName), limitNum);
+
+      res.status(200).json({
+        success: true,
+        data: result,
+      });
+    } catch (error: any) {
+      console.error('获取Top成单产品失败:', error);
+
+      res.status(500).json({
+        success: false,
+        message: '获取Top成单产品失败',
+        error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+      });
+    }
+  }
 }
 
 export default CustomerAnalysisController;

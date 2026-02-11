@@ -13,7 +13,8 @@ class DatabaseManager {
   private SQL: any;
 
   private constructor() {
-    this.dbPath = path.join(process.cwd(), 'orders.db');
+    // 使用backend目录下的数据库文件，避免路径混淆
+    this.dbPath = path.join(__dirname, '../../orders.db');
   }
 
   /**
@@ -75,7 +76,7 @@ class DatabaseManager {
       )
     `);
 
-    // 创建orders表
+    // 创建orders表（包含所有字段）
     this.db.run(`
       CREATE TABLE IF NOT EXISTS orders (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -91,6 +92,10 @@ class DatabaseManager {
         customer_nature TEXT,
         invoice_amount REAL,
         payment_amount REAL,
+        customer_background_check TEXT,
+        closed_product TEXT,
+        payment_date TEXT,
+        exw_value REAL,
         created_at TEXT NOT NULL DEFAULT (datetime('now')),
         updated_at TEXT NOT NULL DEFAULT (datetime('now')),
         FOREIGN KEY (company_name) REFERENCES customers(company_name) ON DELETE CASCADE
@@ -102,6 +107,8 @@ class DatabaseManager {
     this.db.run('CREATE INDEX IF NOT EXISTS idx_orders_order_date ON orders(order_date)');
     this.db.run('CREATE INDEX IF NOT EXISTS idx_orders_country ON orders(country)');
     this.db.run('CREATE INDEX IF NOT EXISTS idx_orders_continent ON orders(continent)');
+    this.db.run('CREATE INDEX IF NOT EXISTS idx_orders_closed_product ON orders(closed_product)');
+    this.db.run('CREATE INDEX IF NOT EXISTS idx_orders_customer_product ON orders(company_name, closed_product)');
 
     console.log('数据库表结构创建成功');
   }

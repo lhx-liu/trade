@@ -27,4 +27,11 @@ router.get('/customers/:companyName', async (req, res) => {
   await getController().getCustomerDetail(req, res);
 });
 
+/**
+ * GET /api/customer-analysis/customers/:companyName/top-products - 获取客户Top N成单产品
+ */
+router.get('/customers/:companyName/top-products', async (req, res) => {
+  await getController().getTopProducts(req, res);
+});
+
 export default router;

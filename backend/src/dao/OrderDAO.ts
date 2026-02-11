@@ -20,8 +20,9 @@ class OrderDAO {
       INSERT INTO orders (
         order_date, company_name, contact_info, lead_number,
         new_or_old, customer_level, country, continent,
-        source, customer_nature, invoice_amount, payment_amount
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        source, customer_nature, invoice_amount, payment_amount,
+        customer_background_check, closed_product, payment_date, exw_value
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const params = [
@@ -37,6 +38,10 @@ class OrderDAO {
       order.customerNature || null,
       order.invoiceAmount || null,
       order.paymentAmount || null,
+      order.customerBackgroundCheck || null,
+      order.closedProduct,
+      order.paymentDate || null,
+      order.exwValue || null,
     ];
 
     this.db.run(sql, params);
@@ -64,6 +69,10 @@ class OrderDAO {
         customer_nature = ?,
         invoice_amount = ?,
         payment_amount = ?,
+        customer_background_check = ?,
+        closed_product = ?,
+        payment_date = ?,
+        exw_value = ?,
         updated_at = datetime('now')
       WHERE id = ?
     `;
@@ -81,6 +90,10 @@ class OrderDAO {
       order.customerNature || null,
       order.invoiceAmount || null,
       order.paymentAmount || null,
+      order.customerBackgroundCheck || null,
+      order.closedProduct,
+      order.paymentDate || null,
+      order.exwValue || null,
       id,
     ];
 

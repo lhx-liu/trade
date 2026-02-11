@@ -54,4 +54,24 @@ export const customerAnalysisApi = {
 
     return response.data.data;
   },
+
+  /**
+   * 获取客户的Top N成单产品
+   */
+  async getTopProducts(companyName: string, limit: number = 5): Promise<{
+    products: Array<{ productName: string; count: number; rank: number }>;
+    totalCount: number;
+  }> {
+    const response = await apiClient.get<{
+      success: boolean;
+      data: {
+        products: Array<{ productName: string; count: number; rank: number }>;
+        totalCount: number;
+      };
+    }>(`/customer-analysis/customers/${encodeURIComponent(companyName)}/top-products`, {
+      params: { limit },
+    });
+
+    return response.data.data;
+  },
 };

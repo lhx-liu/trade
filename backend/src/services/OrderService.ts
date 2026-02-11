@@ -2,7 +2,7 @@ import DatabaseManager from '../database/DatabaseManager';
 import OrderDAO from '../dao/OrderDAO';
 import CustomerDAO from '../dao/CustomerDAO';
 import { Order, QueryParams } from '../types';
-import { validateEmail, validateRequired, validateNumber, validateDate } from '../utils/validation';
+import { validateEmail, validateRequired, validateNumber, validateDate, validateOrderNewFields } from '../utils/validation';
 
 /**
  * OrderService - 订单业务逻辑服务
@@ -70,6 +70,12 @@ class OrderService {
     // 验证商机字段长度
     if (orderData.businessOpportunity && orderData.businessOpportunity.length > 500) {
       throw new Error('客户商机不能超过500个字符');
+    }
+
+    // 验证新字段
+    const newFieldsValidation = validateOrderNewFields(orderData);
+    if (!newFieldsValidation.valid) {
+      throw new Error(newFieldsValidation.errors.join('; '));
     }
 
     // 使用事务创建订单和客户
@@ -157,6 +163,12 @@ class OrderService {
     // 验证商机字段长度
     if (orderData.businessOpportunity && orderData.businessOpportunity.length > 500) {
       throw new Error('客户商机不能超过500个字符');
+    }
+
+    // 验证新字段
+    const newFieldsValidation = validateOrderNewFields(orderData);
+    if (!newFieldsValidation.valid) {
+      throw new Error(newFieldsValidation.errors.join('; '));
     }
 
     // 检查订单是否存在

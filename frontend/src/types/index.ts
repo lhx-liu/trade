@@ -21,6 +21,11 @@ export interface Order {
   invoiceAmount?: number;
   paymentAmount?: number;
   businessOpportunity?: string;   // 客户商机（从客户表关联查询）
+  // 新增字段
+  customerBackgroundCheck?: string; // 客户背调
+  closedProduct: string;            // 成单产品（必填）
+  paymentDate?: string;             // 到款日期 (YYYY-MM-DD)
+  exwValue?: number;                // EXW货值
   createdAt?: string;
   updatedAt?: string;
 }
