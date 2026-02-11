@@ -1,5 +1,6 @@
 import express, { Express } from 'express';
 import cors from 'cors';
+import path from 'path';
 import DatabaseManager from './database/DatabaseManager';
 import orderRoutes from './routes/orderRoutes';
 import customerRoutes from './routes/customerRoutes';
@@ -39,8 +40,19 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: '服务运行正常' });
 });
 
-// 404处理
-app.use(notFoundHandler);
+// 托管前端静态文件（生产环境）
+if (process.env.NODE_ENV === 'production') {
+  const frontendPath = path.join(__dirname, '../../frontend/dist');
+  app.use(express.static(frontendPath));
+  
+  // 所有非API请求都返回index.html（支持前端路由）
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(frontendPath, 'index.html'));
+  });
+} else {
+  // 开发环境下的404处理
+  app.use(notFoundHandler);
+}
 
 // 全局错误处理
 app.use(errorHandler);

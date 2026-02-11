@@ -49,6 +49,44 @@ npm install
 npm run dev
 ```
 
+## 生产部署
+
+### 方式一：使用部署脚本（推荐）
+
+```bash
+# 1. 构建前后端
+deploy.bat
+
+# 2. 启动服务器
+start-production.bat
+```
+
+### 方式二：手动部署
+
+```bash
+# 1. 构建前端
+cd frontend
+npm run build
+
+# 2. 构建后端
+cd ../backend
+npm run build
+
+# 3. 启动生产服务器
+set NODE_ENV=production
+npm start
+```
+
+部署完成后，访问 http://localhost:5000 即可使用系统。
+
+### 部署说明
+
+- 生产环境下，Express 会自动托管前端静态文件
+- 前端打包文件位于 `frontend/dist`
+- 后端会从 `../frontend/dist` 读取前端文件
+- 所有 API 请求通过 `/api` 路径访问
+- 支持前端路由（SPA）
+
 ## 功能特性
 
 - 订单录入和管理

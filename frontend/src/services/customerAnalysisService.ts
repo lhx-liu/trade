@@ -2,7 +2,6 @@ import apiClient from './api';
 import type {
   CustomerMetrics,
   CustomerDetailAnalysis,
-  FilterCriteria,
 } from '../types/customerAnalysis';
 
 /**
