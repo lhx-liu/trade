@@ -12,17 +12,14 @@ const { Option } = Select;
 const QueryForm: React.FC = () => {
   const [form] = Form.useForm();
   const { actions } = useAppContext();
-  const [dateRange, setDateRange] = useState<[Dayjs, Dayjs]>(() => {
-    const [start, end] = getCurrentYearRange();
-    return [dayjs(start), dayjs(end)];
-  });
+  const [dateRange, setDateRange] = useState<[Dayjs, Dayjs] | null>(null);
   const [expanded, setExpanded] = useState(false);
 
   const toggleExpanded = () => {
     setExpanded(!expanded);
   };
 
-  // 初始化时自动查询当年数据
+  // 初始化时自动查询全部数据
   useEffect(() => {
     handleSearch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -39,8 +36,10 @@ const QueryForm: React.FC = () => {
     const params: QueryParams = {
       ...values,
       [field]: value,
-      startDate: dateRange[0].format('YYYY-MM-DD'),
-      endDate: dateRange[1].format('YYYY-MM-DD'),
+      ...(dateRange && {
+        startDate: dateRange[0].format('YYYY-MM-DD'),
+        endDate: dateRange[1].format('YYYY-MM-DD'),
+      }),
       page: 1,
       pageSize: 20,
     };
@@ -60,6 +59,16 @@ const QueryForm: React.FC = () => {
         pageSize: 20,
       };
       actions.fetchOrders(params);
+    } else {
+      // 清空日期范围，查询全部数据
+      setDateRange(null);
+      const values = form.getFieldsValue();
+      const params: QueryParams = {
+        ...values,
+        page: 1,
+        pageSize: 20,
+      };
+      actions.fetchOrders(params);
     }
   };
 
@@ -68,8 +77,10 @@ const QueryForm: React.FC = () => {
     const values = form.getFieldsValue();
     const params: QueryParams = {
       ...values,
-      startDate: dateRange[0].format('YYYY-MM-DD'),
-      endDate: dateRange[1].format('YYYY-MM-DD'),
+      ...(dateRange && {
+        startDate: dateRange[0].format('YYYY-MM-DD'),
+        endDate: dateRange[1].format('YYYY-MM-DD'),
+      }),
       page: 1,
       pageSize: 20,
     };
@@ -79,13 +90,9 @@ const QueryForm: React.FC = () => {
   // 处理重置按钮点击
   const handleReset = () => {
     form.resetFields();
-    const [start, end] = getCurrentYearRange();
-    const newDateRange: [Dayjs, Dayjs] = [dayjs(start), dayjs(end)];
-    setDateRange(newDateRange);
+    setDateRange(null);
     
     const params: QueryParams = {
-      startDate: start,
-      endDate: end,
       page: 1,
       pageSize: 20,
     };

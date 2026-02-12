@@ -96,6 +96,7 @@ class DatabaseManager {
         closed_product TEXT,
         payment_date TEXT,
         exw_value REAL,
+        purchase_order_number TEXT,
         created_at TEXT NOT NULL DEFAULT (datetime('now')),
         updated_at TEXT NOT NULL DEFAULT (datetime('now')),
         FOREIGN KEY (company_name) REFERENCES customers(company_name) ON DELETE CASCADE

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Table, Descriptions, Spin, Button, Space } from 'antd';
+import { Modal, Table, Descriptions, Spin, Button, Space, Tag } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { useAppContext } from '../../context/AppContext';
@@ -78,13 +78,30 @@ const CustomerModal: React.FC<CustomerModalProps> = ({
       dataIndex: 'orderDate',
       key: 'orderDate',
       width: 120,
+      fixed: 'left',
       render: (date: string) => formatDate(date),
     },
     {
-      title: '线索编号',
-      dataIndex: 'leadNumber',
-      key: 'leadNumber',
-      width: 120,
+      title: '新老客户',
+      dataIndex: 'newOrOld',
+      key: 'newOrOld',
+      width: 100,
+      render: (value: string) => {
+        if (!value) return '-';
+        return <Tag color={value === '新客户' ? 'green' : 'blue'}>{value}</Tag>;
+      },
+    },
+    {
+      title: '国家',
+      dataIndex: 'country',
+      key: 'country',
+      width: 100,
+    },
+    {
+      title: '公司名',
+      dataIndex: 'companyName',
+      key: 'companyName',
+      width: 150,
     },
     {
       title: '客户信息',
@@ -105,22 +122,39 @@ const CustomerModal: React.FC<CustomerModalProps> = ({
       },
     },
     {
-      title: '新老客户',
-      dataIndex: 'newOrOld',
-      key: 'newOrOld',
-      width: 100,
+      title: '客户背调',
+      dataIndex: 'customerBackgroundCheck',
+      key: 'customerBackgroundCheck',
+      width: 150,
+      ellipsis: true,
+      render: (text: string) => text || '-',
     },
     {
-      title: '客户等级',
-      dataIndex: 'customerLevel',
-      key: 'customerLevel',
-      width: 100,
+      title: '成单产品',
+      dataIndex: 'closedProduct',
+      key: 'closedProduct',
+      width: 120,
+      render: (text: string) => text || '-',
     },
     {
-      title: '国家',
-      dataIndex: 'country',
-      key: 'country',
-      width: 100,
+      title: '请购单号',
+      dataIndex: 'purchaseOrderNumber',
+      key: 'purchaseOrderNumber',
+      width: 120,
+      render: (text: string) => text || '-',
+    },
+    {
+      title: '线索编号',
+      dataIndex: 'leadNumber',
+      key: 'leadNumber',
+      width: 120,
+    },
+    {
+      title: '到款日期',
+      dataIndex: 'paymentDate',
+      key: 'paymentDate',
+      width: 120,
+      render: (date: string) => date ? formatDate(date) : '-',
     },
     {
       title: '发票金额',
@@ -137,6 +171,58 @@ const CustomerModal: React.FC<CustomerModalProps> = ({
       width: 120,
       align: 'right',
       render: (amount: number) => formatCurrency(amount),
+    },
+    {
+      title: 'EXW货值',
+      dataIndex: 'exwValue',
+      key: 'exwValue',
+      width: 120,
+      align: 'right',
+      render: (amount: number) => formatCurrency(amount),
+    },
+    {
+      title: '客户商机',
+      dataIndex: 'businessOpportunity',
+      key: 'businessOpportunity',
+      width: 200,
+      ellipsis: true,
+      render: (text: string) => text || '-',
+    },
+    {
+      title: '客户等级',
+      dataIndex: 'customerLevel',
+      key: 'customerLevel',
+      width: 100,
+      render: (level: string) => {
+        if (!level) return '-';
+        const colors: Record<string, string> = { A: 'red', B: 'orange', C: 'default' };
+        return <Tag color={colors[level]}>{level}</Tag>;
+      },
+    },
+    {
+      title: '建档日期',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      width: 120,
+      render: (date: string) => date ? formatDate(date) : '-',
+    },
+    {
+      title: '客户性质',
+      dataIndex: 'customerNature',
+      key: 'customerNature',
+      width: 100,
+    },
+    {
+      title: '来源',
+      dataIndex: 'source',
+      key: 'source',
+      width: 100,
+    },
+    {
+      title: '大洲',
+      dataIndex: 'continent',
+      key: 'continent',
+      width: 100,
     },
     {
       title: '操作',
@@ -164,7 +250,7 @@ const CustomerModal: React.FC<CustomerModalProps> = ({
         title={`客户订单 - ${companyName}`}
         open={visible}
         onCancel={handleModalClose}
-        width={1200}
+        width={1400}
         footer={null}
       >
         <Spin spinning={loading}>
@@ -195,7 +281,7 @@ const CustomerModal: React.FC<CustomerModalProps> = ({
               showTotal: (total) => `共 ${total} 条记录`,
               onChange: handlePageChange,
             }}
-            scroll={{ x: 1000 }}
+            scroll={{ x: 2500 }}
           />
         </Spin>
       </Modal>

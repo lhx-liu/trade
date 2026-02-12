@@ -16,12 +16,17 @@ class StatisticsService {
    * 计算统计数据
    * 需求: 6.1, 6.2, 6.3, 6.4
    */
-  async calculateStatistics(startDate: string, endDate: string): Promise<Statistics> {
+  async calculateStatistics(startDate?: string, endDate?: string): Promise<Statistics> {
     const db = this.dbManager.getDatabase();
 
     // 构建日期范围条件
-    const dateCondition = 'WHERE order_date BETWEEN ? AND ?';
-    const dateParams = [startDate, endDate];
+    let dateCondition = '';
+    let dateParams: string[] = [];
+    
+    if (startDate && endDate) {
+      dateCondition = 'WHERE order_date BETWEEN ? AND ?';
+      dateParams = [startDate, endDate];
+    }
 
     // 1. 订单总数
     const totalOrdersResult = db.exec(`SELECT COUNT(*) as total FROM orders ${dateCondition}`, dateParams);
@@ -49,8 +54,9 @@ class StatisticsService {
     const totalPaymentAmount = totalPaymentResult[0]?.values[0][0] as number || 0;
 
     // 5. 按国家分组统计
+    const countryCondition = dateCondition ? `${dateCondition} AND country IS NOT NULL` : 'WHERE country IS NOT NULL';
     const byCountryResult = db.exec(
-      `SELECT country, COUNT(*) as count FROM orders ${dateCondition} AND country IS NOT NULL GROUP BY country`,
+      `SELECT country, COUNT(*) as count FROM orders ${countryCondition} GROUP BY country`,
       dateParams
     );
     const byCountry: Record<string, number> = {};
@@ -61,8 +67,9 @@ class StatisticsService {
     }
 
     // 6. 按大洲分组统计
+    const continentCondition = dateCondition ? `${dateCondition} AND continent IS NOT NULL` : 'WHERE continent IS NOT NULL';
     const byContinentResult = db.exec(
-      `SELECT continent, COUNT(*) as count FROM orders ${dateCondition} AND continent IS NOT NULL GROUP BY continent`,
+      `SELECT continent, COUNT(*) as count FROM orders ${continentCondition} GROUP BY continent`,
       dateParams
     );
     const byContinent: Record<string, number> = {};
@@ -73,8 +80,9 @@ class StatisticsService {
     }
 
     // 7. 按客户等级分组统计
+    const levelCondition = dateCondition ? `${dateCondition} AND customer_level IS NOT NULL` : 'WHERE customer_level IS NOT NULL';
     const byCustomerLevelResult = db.exec(
-      `SELECT customer_level, COUNT(*) as count FROM orders ${dateCondition} AND customer_level IS NOT NULL GROUP BY customer_level`,
+      `SELECT customer_level, COUNT(*) as count FROM orders ${levelCondition} GROUP BY customer_level`,
       dateParams
     );
     const byCustomerLevel: Record<string, number> = {};
@@ -131,14 +139,21 @@ class StatisticsService {
    * 生成Excel报表
    * 需求: 6.5
    */
-  async generateExcelReport(startDate: string, endDate: string): Promise<Buffer> {
+  async generateExcelReport(startDate?: string, endDate?: string): Promise<Buffer> {
     const db = this.dbManager.getDatabase();
 
     // 查询订单数据
-    const ordersResult = db.exec(
-      `SELECT * FROM orders WHERE order_date BETWEEN ? AND ? ORDER BY order_date DESC`,
-      [startDate, endDate]
-    );
+    let query = 'SELECT * FROM orders';
+    let params: string[] = [];
+    
+    if (startDate && endDate) {
+      query += ' WHERE order_date BETWEEN ? AND ?';
+      params = [startDate, endDate];
+    }
+    
+    query += ' ORDER BY order_date DESC';
+    
+    const ordersResult = db.exec(query, params);
 
     // 创建工作簿
     const workbook = new ExcelJS.Workbook();

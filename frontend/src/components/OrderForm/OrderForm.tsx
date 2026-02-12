@@ -110,7 +110,8 @@ const OrderForm: React.FC<OrderFormProps> = ({ visible, onCancel, editingOrder }
             contactInfo: [{ name: '', email: '', phone: '' }],
           }}
         >
-          {/* 必填字段 */}
+          {/* 按照指定顺序排列字段 */}
+          {/* 1. 订单日期 */}
           <Form.Item
             label="订单日期"
             name="orderDate"
@@ -119,6 +120,24 @@ const OrderForm: React.FC<OrderFormProps> = ({ visible, onCancel, editingOrder }
             <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
           </Form.Item>
 
+          {/* 2. 新老客户 */}
+          <Form.Item label="新老客户" name="newOrOld">
+            <Select placeholder="请选择新老客户" allowClear>
+              <Option value="新客户">新客户</Option>
+              <Option value="老客户">老客户</Option>
+            </Select>
+          </Form.Item>
+
+          {/* 3. 国家 */}
+          <Form.Item
+            label="国家"
+            name="country"
+            rules={[{ max: 50, message: '国家不能超过50个字符' }]}
+          >
+            <Input placeholder="请输入国家" />
+          </Form.Item>
+
+          {/* 4. 公司名 */}
           <Form.Item
             label="公司名"
             name="companyName"
@@ -130,10 +149,42 @@ const OrderForm: React.FC<OrderFormProps> = ({ visible, onCancel, editingOrder }
             <Input placeholder="请输入公司名" />
           </Form.Item>
 
+          {/* 5. 客户信息（客户名、邮箱、联系方式） */}
           <Form.Item label="客户信息" required>
             <ContactInfoInput />
           </Form.Item>
 
+          {/* 6. 客户背调 */}
+          <Form.Item
+            label="客户背调"
+            name="customerBackgroundCheck"
+          >
+            <Input.TextArea
+              placeholder="请输入客户背调信息"
+              rows={2}
+            />
+          </Form.Item>
+
+          {/* 7. 成单产品 */}
+          <Form.Item
+            label="成单产品"
+            name="closedProduct"
+            rules={[
+              { required: true, message: '请输入成单产品' },
+            ]}
+          >
+            <Input placeholder="请输入成单产品" />
+          </Form.Item>
+
+          {/* 8. 请购单号 */}
+          <Form.Item
+            label="请购单号"
+            name="purchaseOrderNumber"
+          >
+            <Input placeholder="请输入请购单号" />
+          </Form.Item>
+
+          {/* 9. 线索编号 */}
           <Form.Item
             label="线索编号"
             name="leadNumber"
@@ -145,54 +196,15 @@ const OrderForm: React.FC<OrderFormProps> = ({ visible, onCancel, editingOrder }
             <Input placeholder="请输入线索编号" />
           </Form.Item>
 
-          {/* 可选字段 */}
-          <Form.Item label="新老客户" name="newOrOld">
-            <Select placeholder="请选择新老客户" allowClear>
-              <Option value="新客户">新客户</Option>
-              <Option value="老客户">老客户</Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item label="客户等级" name="customerLevel">
-            <Select placeholder="请选择客户等级" allowClear>
-              <Option value="A">A</Option>
-              <Option value="B">B</Option>
-              <Option value="C">C</Option>
-            </Select>
-          </Form.Item>
-
+          {/* 10. 到款日期 */}
           <Form.Item
-            label="国家"
-            name="country"
-            rules={[{ max: 50, message: '国家不能超过50个字符' }]}
+            label="到款日期"
+            name="paymentDate"
           >
-            <Input placeholder="请输入国家" />
+            <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
           </Form.Item>
 
-          <Form.Item
-            label="大洲"
-            name="continent"
-            rules={[{ max: 50, message: '大洲不能超过50个字符' }]}
-          >
-            <Input placeholder="请输入大洲" />
-          </Form.Item>
-
-          <Form.Item
-            label="来源"
-            name="source"
-            rules={[{ max: 50, message: '来源不能超过50个字符' }]}
-          >
-            <Input placeholder="请输入来源" />
-          </Form.Item>
-
-          <Form.Item
-            label="客户性质"
-            name="customerNature"
-            rules={[{ max: 50, message: '客户性质不能超过50个字符' }]}
-          >
-            <Input placeholder="请输入客户性质" />
-          </Form.Item>
-
+          {/* 11. 发票金额 */}
           <Form.Item
             label="发票金额"
             name="invoiceAmount"
@@ -215,6 +227,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ visible, onCancel, editingOrder }
             />
           </Form.Item>
 
+          {/* 12. 到款金额 */}
           <Form.Item
             label="到款金额"
             name="paymentAmount"
@@ -237,49 +250,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ visible, onCancel, editingOrder }
             />
           </Form.Item>
 
-          <Form.Item
-            label="客户商机"
-            name="businessOpportunity"
-            rules={[
-              { max: 500, message: '客户商机不能超过500个字符' }
-            ]}
-          >
-            <Input.TextArea
-              placeholder="请输入客户商机信息"
-              rows={3}
-              maxLength={500}
-              showCount
-            />
-          </Form.Item>
-
-          {/* 新增字段 */}
-          <Form.Item
-            label="客户背调"
-            name="customerBackgroundCheck"
-          >
-            <Input.TextArea
-              placeholder="请输入客户背调信息"
-              rows={2}
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="成单产品"
-            name="closedProduct"
-            rules={[
-              { required: true, message: '请输入成单产品' },
-            ]}
-          >
-            <Input placeholder="请输入成单产品" />
-          </Form.Item>
-
-          <Form.Item
-            label="到款日期"
-            name="paymentDate"
-          >
-            <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
-          </Form.Item>
-
+          {/* 13. EXW货值 */}
           <Form.Item
             label="EXW货值"
             name="exwValue"
@@ -303,6 +274,60 @@ const OrderForm: React.FC<OrderFormProps> = ({ visible, onCancel, editingOrder }
               min={0}
               precision={2}
             />
+          </Form.Item>
+
+          {/* 14. 客户商机 */}
+          <Form.Item
+            label="客户商机"
+            name="businessOpportunity"
+            rules={[
+              { max: 500, message: '客户商机不能超过500个字符' }
+            ]}
+          >
+            <Input.TextArea
+              placeholder="请输入客户商机信息"
+              rows={3}
+              maxLength={500}
+              showCount
+            />
+          </Form.Item>
+
+          {/* 15. 客户等级 */}
+          <Form.Item label="客户等级" name="customerLevel">
+            <Select placeholder="请选择客户等级" allowClear>
+              <Option value="A">A</Option>
+              <Option value="B">B</Option>
+              <Option value="C">C</Option>
+            </Select>
+          </Form.Item>
+
+          {/* 16. 建档日期 - 使用 createdAt 字段（自动生成，不需要用户输入） */}
+
+          {/* 17. 客户性质 */}
+          <Form.Item
+            label="客户性质"
+            name="customerNature"
+            rules={[{ max: 50, message: '客户性质不能超过50个字符' }]}
+          >
+            <Input placeholder="请输入客户性质" />
+          </Form.Item>
+
+          {/* 18. 来源 */}
+          <Form.Item
+            label="来源"
+            name="source"
+            rules={[{ max: 50, message: '来源不能超过50个字符' }]}
+          >
+            <Input placeholder="请输入来源" />
+          </Form.Item>
+
+          {/* 19. 大洲 */}
+          <Form.Item
+            label="大洲"
+            name="continent"
+            rules={[{ max: 50, message: '大洲不能超过50个字符' }]}
+          >
+            <Input placeholder="请输入大洲" />
           </Form.Item>
         </Form>
       </Spin>

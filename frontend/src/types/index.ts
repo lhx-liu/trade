@@ -26,6 +26,7 @@ export interface Order {
   closedProduct: string;            // 成单产品（必填）
   paymentDate?: string;             // 到款日期 (YYYY-MM-DD)
   exwValue?: number;                // EXW货值
+  purchaseOrderNumber?: string;     // 请购单号
   createdAt?: string;
   updatedAt?: string;
 }

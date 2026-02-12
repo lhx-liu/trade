@@ -19,18 +19,8 @@ function getStatisticsService(): StatisticsService {
  */
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const startDate = req.query.startDate as string;
-    const endDate = req.query.endDate as string;
-
-    if (!startDate || !endDate) {
-      const response: ApiResponse<null> = {
-        success: false,
-        message: '参数验证失败',
-        error: 'startDate和endDate为必填参数',
-      };
-
-      return res.status(400).json(response);
-    }
+    const startDate = req.query.startDate as string | undefined;
+    const endDate = req.query.endDate as string | undefined;
 
     const statistics = await getStatisticsService().calculateStatistics(startDate, endDate);
 
@@ -57,23 +47,17 @@ router.get('/', async (req: Request, res: Response) => {
  */
 router.get('/export', async (req: Request, res: Response) => {
   try {
-    const startDate = req.query.startDate as string;
-    const endDate = req.query.endDate as string;
-
-    if (!startDate || !endDate) {
-      const response: ApiResponse<null> = {
-        success: false,
-        message: '参数验证失败',
-        error: 'startDate和endDate为必填参数',
-      };
-
-      return res.status(400).json(response);
-    }
+    const startDate = req.query.startDate as string | undefined;
+    const endDate = req.query.endDate as string | undefined;
 
     const buffer = await getStatisticsService().generateExcelReport(startDate, endDate);
 
+    const fileName = startDate && endDate 
+      ? `orders_${startDate}_${endDate}.xlsx`
+      : `orders_all.xlsx`;
+
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', `attachment; filename=orders_${startDate}_${endDate}.xlsx`);
+    res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
     res.send(buffer);
   } catch (error: any) {
     const response: ApiResponse<null> = {

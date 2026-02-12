@@ -5,9 +5,13 @@ import QueryForm from './QueryForm';
 import OrderTable from './OrderTable';
 import OrderForm from '../OrderForm/OrderForm';
 import CustomerModal from '../CustomerModal/CustomerModal';
+import ExcelImportButton from '../ExcelImport/ExcelImportButton';
+import ExcelExportButton from '../ExcelExport/ExcelExportButton';
+import { useAppContext } from '../../context/AppContext';
 import type { Order } from '../../types';
 
 const OrderList: React.FC = () => {
+  const { state, actions } = useAppContext();
   const [orderFormVisible, setOrderFormVisible] = useState(false);
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
   const [customerModalVisible, setCustomerModalVisible] = useState(false);
@@ -17,6 +21,11 @@ const OrderList: React.FC = () => {
   const handleCreateOrder = () => {
     setEditingOrder(null);
     setOrderFormVisible(true);
+  };
+
+  // 导入成功后刷新订单列表
+  const handleImportSuccess = async () => {
+    await actions.fetchOrders(state.queryParams);
   };
 
   // 打开编辑订单表单
@@ -53,6 +62,8 @@ const OrderList: React.FC = () => {
         >
           新建订单
         </Button>
+        <ExcelImportButton onImportSuccess={handleImportSuccess} />
+        <ExcelExportButton />
       </Space>
 
       <QueryForm />

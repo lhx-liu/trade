@@ -12,16 +12,12 @@ const { RangePicker } = DatePicker;
 
 const Statistics: React.FC = () => {
   const { state, actions } = useAppContext();
-  const [dateRange, setDateRange] = useState<[Dayjs, Dayjs]>(() => {
-    const [start, end] = getCurrentYearRange();
-    return [dayjs(start), dayjs(end)];
-  });
+  const [dateRange, setDateRange] = useState<[Dayjs, Dayjs] | null>(null);
   const [exporting, setExporting] = useState(false);
 
-  // 初始化时加载统计数据
+  // 初始化时加载全部统计数据
   useEffect(() => {
-    const [start, end] = getCurrentYearRange();
-    actions.fetchStatistics(start, end);
+    actions.fetchStatistics();
   }, []);
 
   // 处理日期范围变化
@@ -31,6 +27,10 @@ const Statistics: React.FC = () => {
       const startDate = dates[0].format('YYYY-MM-DD');
       const endDate = dates[1].format('YYYY-MM-DD');
       actions.fetchStatistics(startDate, endDate);
+    } else {
+      // 清空日期范围，查询全部数据
+      setDateRange(null);
+      actions.fetchStatistics();
     }
   };
 
@@ -38,16 +38,24 @@ const Statistics: React.FC = () => {
   const handleExport = async () => {
     try {
       setExporting(true);
-      const startDate = dateRange[0].format('YYYY-MM-DD');
-      const endDate = dateRange[1].format('YYYY-MM-DD');
       
-      const blob = await statisticsApi.exportExcel(startDate, endDate);
+      let blob;
+      if (dateRange) {
+        const startDate = dateRange[0].format('YYYY-MM-DD');
+        const endDate = dateRange[1].format('YYYY-MM-DD');
+        blob = await statisticsApi.exportExcel(startDate, endDate);
+      } else {
+        blob = await statisticsApi.exportExcel();
+      }
       
       // 创建下载链接
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `订单报表_${startDate}_${endDate}.xlsx`;
+      const fileName = dateRange 
+        ? `订单报表_${dateRange[0].format('YYYY-MM-DD')}_${dateRange[1].format('YYYY-MM-DD')}.xlsx`
+        : `订单报表_全部.xlsx`;
+      link.download = fileName;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
