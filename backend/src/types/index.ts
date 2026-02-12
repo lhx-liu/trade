@@ -112,6 +112,7 @@ export interface CustomerAnalysisQuery extends FilterCriteria {
   pageSize?: number;       // 每页数量，默认20
   sortBy?: string;         // 排序字段
   sortOrder?: 'asc' | 'desc'; // 排序方向
+  companyName?: string;    // 公司名称模糊查询
 }
 
 // 下单频率指标
@@ -193,4 +194,25 @@ export interface TopProduct {
 export interface TopProductsResponse {
   products: TopProduct[];  // Top产品列表
   totalCount: number;      // 总订单数
+}
+
+// ============ 产品排行榜相关类型 ============
+
+// 产品排行榜查询参数
+export interface ProductRankingQuery {
+  startDate?: string;  // 开始日期 (YYYY-MM-DD)
+  endDate?: string;    // 结束日期 (YYYY-MM-DD)
+}
+
+// 产品排行榜项
+export interface ProductRankingItem {
+  productName: string;  // 产品名称
+  salesCount: number;   // 销售数量
+  salesAmount: number;  // 销售金额
+}
+
+// 产品排行榜响应
+export interface ProductRankingResponse {
+  products: ProductRankingItem[];  // 产品列表
+  total: number;                   // 产品总数
 }

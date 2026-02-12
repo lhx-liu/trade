@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Select, Button, Space, Card } from 'antd';
+import { Form, Select, Button, Space, Card, Input } from 'antd';
 import { FilterCriteria } from '../../types/customerAnalysis';
 
 const { Option } = Select;
@@ -37,17 +37,11 @@ const CustomerFilter: React.FC<CustomerFilterProps> = ({
         onValuesChange={handleValuesChange}
       >
         <Form.Item name="country" label="国家">
-          <Select
-            placeholder="请选择国家"
+          <Input
+            placeholder="请输入国家"
             allowClear
             style={{ width: 150 }}
-          >
-            <Option value="美国">美国</Option>
-            <Option value="中国">中国</Option>
-            <Option value="德国">德国</Option>
-            <Option value="日本">日本</Option>
-            <Option value="英国">英国</Option>
-          </Select>
+          />
         </Form.Item>
 
         <Form.Item name="customerLevel" label="客户等级">

@@ -16,7 +16,7 @@ class CustomerAnalysisDAO {
    * 查询客户及其订单统计
    * 返回所有客户的基础指标数据
    */
-  getCustomersWithMetrics(filters: FilterCriteria): CustomerMetrics[] {
+  getCustomersWithMetrics(filters: FilterCriteria & { companyName?: string }): CustomerMetrics[] {
     try {
       const conditions: string[] = [];
       const values: any[] = [];
@@ -35,6 +35,12 @@ class CustomerAnalysisDAO {
       if (filters.customerType) {
         conditions.push('new_or_old = ?');
         values.push(filters.customerType);
+      }
+
+      // 公司名称模糊查询（不区分大小写）
+      if (filters.companyName) {
+        conditions.push('LOWER(company_name) LIKE LOWER(?)');
+        values.push(`%${filters.companyName}%`);
       }
 
       const whereClause = conditions.length > 0 ? `AND ${conditions.join(' AND ')}` : '';
@@ -111,7 +117,7 @@ class CustomerAnalysisDAO {
   /**
    * 获取符合筛选条件的客户总数
    */
-  getCustomerCount(filters: FilterCriteria): number {
+  getCustomerCount(filters: FilterCriteria & { companyName?: string }): number {
     try {
       const conditions: string[] = [];
       const values: any[] = [];
@@ -129,6 +135,12 @@ class CustomerAnalysisDAO {
       if (filters.customerType) {
         conditions.push('new_or_old = ?');
         values.push(filters.customerType);
+      }
+
+      // 公司名称模糊查询（不区分大小写）
+      if (filters.companyName) {
+        conditions.push('LOWER(company_name) LIKE LOWER(?)');
+        values.push(`%${filters.companyName}%`);
       }
 
       const whereClause = conditions.length > 0 ? `AND ${conditions.join(' AND ')}` : '';

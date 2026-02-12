@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Select, DatePicker, Button, Row, Col, Card, Space } from 'antd';
 import { SearchOutlined, ReloadOutlined, DownOutlined, UpOutlined } from '@ant-design/icons';
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 import { useAppContext } from '../../context/AppContext';
-import { debounce, getCurrentYearRange } from '../../utils';
+import { debounce } from '../../utils';
 import type { QueryParams } from '../../types';
 
 const { RangePicker } = DatePicker;
@@ -117,7 +117,7 @@ const QueryForm: React.FC = () => {
           <Col span={6}>
             <Form.Item label="公司名称" name="companyName">
               <Input
-                placeholder="请输入公司名称"
+                placeholder="请输入公司名称（支持模糊搜索）"
                 allowClear
                 onChange={(e) => handleTextChange('companyName', e.target.value)}
               />

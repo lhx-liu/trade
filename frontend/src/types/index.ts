@@ -87,3 +87,19 @@ export interface PaginatedResponse<T> {
   page: number;
   pageSize: number;
 }
+
+// ============ 产品排行榜相关类型 ============
+
+// 产品排行榜项
+export interface ProductRankingItem {
+  productName: string;  // 产品名称
+  salesCount: number;   // 销售数量
+  salesAmount: number;  // 销售金额
+}
+
+// 产品排行榜状态
+export interface ProductRankingState {
+  data: ProductRankingItem[];
+  loading: boolean;
+  error: string | null;
+}

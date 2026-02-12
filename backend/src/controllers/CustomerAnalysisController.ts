@@ -20,7 +20,7 @@ class CustomerAnalysisController {
   async getCustomers(req: Request, res: Response): Promise<void> {
     try {
       // 参数验证
-      const { page, pageSize, sortBy, sortOrder, country, customerLevel, customerType } = req.query;
+      const { page, pageSize, sortBy, sortOrder, country, customerLevel, customerType, companyName } = req.query;
 
       // 验证页码
       if (page && (isNaN(Number(page)) || Number(page) < 1)) {
@@ -58,6 +58,7 @@ class CustomerAnalysisController {
         country: country as string,
         customerLevel: customerLevel as string,
         customerType: customerType as string,
+        companyName: companyName as string,
       };
 
       // 调用服务层

@@ -1,12 +1,13 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { ConfigProvider, Layout, Menu } from 'antd';
-import { ShoppingOutlined, BarChartOutlined, UserOutlined } from '@ant-design/icons';
+import { ShoppingOutlined, BarChartOutlined, UserOutlined, TrophyOutlined } from '@ant-design/icons';
 import zhCN from 'antd/locale/zh_CN';
 import { AppProvider } from './context/AppContext';
 import OrderList from './components/OrderList/OrderList';
 import Statistics from './components/Statistics/Statistics';
 import CustomerAnalysis from './components/CustomerAnalysis/CustomerAnalysis';
+import ProductRanking from './components/ProductRanking/ProductRanking';
 import './App.css';
 
 const { Header, Content } = Layout;
@@ -32,6 +33,11 @@ const AppContent: React.FC = () => {
       key: 'customer-analysis',
       icon: <UserOutlined />,
       label: '客户分析',
+    },
+    {
+      key: 'product-ranking',
+      icon: <TrophyOutlined />,
+      label: '成单产品排行榜',
     },
   ];
 
@@ -66,6 +72,7 @@ const AppContent: React.FC = () => {
           <Route path="/orders" element={<OrderList />} />
           <Route path="/statistics" element={<Statistics />} />
           <Route path="/customer-analysis" element={<CustomerAnalysis />} />
+          <Route path="/product-ranking" element={<ProductRanking />} />
         </Routes>
       </Content>
     </Layout>

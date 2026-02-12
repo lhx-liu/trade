@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Card, DatePicker, Button, Space, message } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 import { useAppContext } from '../../context/AppContext';
-import { getCurrentYearRange } from '../../utils';
 import { statisticsApi } from '../../services/api';
 import StatisticsPanel from './StatisticsPanel';
 import Charts from './Charts';

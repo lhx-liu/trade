@@ -39,6 +39,7 @@ class CustomerAnalysisService {
       country: query.country,
       customerLevel: query.customerLevel,
       customerType: query.customerType,
+      companyName: query.companyName,
     };
 
     // 查询客户数据

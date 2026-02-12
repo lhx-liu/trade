@@ -6,6 +6,7 @@ import orderRoutes from './routes/orderRoutes';
 import customerRoutes from './routes/customerRoutes';
 import statisticsRoutes from './routes/statisticsRoutes';
 import customerAnalysisRoutes from './routes/customerAnalysisRoutes';
+import productRankingRoutes from './routes/productRankingRoutes';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 
 const app: Express = express();
@@ -34,6 +35,7 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/statistics', statisticsRoutes);
 app.use('/api/customer-analysis', customerAnalysisRoutes);
+app.use('/api/product-ranking', productRankingRoutes);
 
 // 健康检查端点
 app.get('/health', (req, res) => {
